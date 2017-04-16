@@ -34,7 +34,6 @@ final class MyJSONParser implements JSONParser {
 	in = in.trim();
 
     if(in.substring(0,1).equals("{")) {
-		System.out.println(in);
 		in = in.trim();
 		//check for start of a hashtable, if so, recurse
 		MyJSON MJ;
@@ -67,8 +66,7 @@ final class MyJSONParser implements JSONParser {
 		skipSecondQuote = skipFirstQuote.substring(endQuote+1).trim();
 		
         if (skipSecondQuote.substring(0,1).equals(":")) {
-			System.out.println("Found semicolon" + skipSecondQuote.substring(0,1));
-	
+			
             // If there is a semicolon, there is a value 
             // associated with that key
             //find the value and put it into your object
@@ -76,9 +74,7 @@ final class MyJSONParser implements JSONParser {
             String skipSemi;
             //remove the semicolom from the stirng and remove whitespace
             skipSemi = skipSecondQuote.substring(1).trim();
-            System.out.println("Hello"+skipSemi);
             if(skipSemi.substring(0,1).equals("\"")){
-				System.out.println("Found a begining quote for a value");
                 int tempStartVal;
                 String newIn;
                 int tempEndVal;
@@ -88,17 +84,15 @@ final class MyJSONParser implements JSONParser {
 				
                 skipFirstQuote = skipSemi.substring(1);
                 tempEndVal = skipFirstQuote.indexOf("\"");
-                System.out.println("Found an end quote for a value");
                 tempValue = skipFirstQuote.substring(0, tempEndVal);
                 in = skipFirstQuote.substring(tempEndVal+1).trim();
                 tempValue = "\""+tempValue.trim()+"\"";  //remove white space in the value string
 
                 //put into hashtable
-                System.out.println(skipFirstQuote.substring(tempEndVal+1));
                 allData.put(tempKey,tempValue);
             }
             else if(skipSemi.substring(0,1).equals("{")){
-				System.out.println("Found an opening brace for a value");
+				
                 // If the symbol after the semicolon is a "{"
                 // then there is another hashtable after the key
                 // but we still add to the hashtable,
@@ -109,7 +103,6 @@ final class MyJSONParser implements JSONParser {
 
                 newIn = skipFirstQuote.substring(endQuote+2);
                 endBraket = newIn.indexOf("}");
-                System.out.println("Found a closing brace for a value");
                 tempValHT = newIn.substring(1,endBraket);
                 //first we parse the hashtable so that
                 //it passes the parsed hashtable in and 
@@ -117,10 +110,8 @@ final class MyJSONParser implements JSONParser {
                 //then we put it in the object
                 Hashtable parsedHT = new Hashtable();
                 MyJSON tempMJ;
-                System.out.println("We are going ro recurse");
                 tempMJ = parse(tempValHT);
-                System.out.println(tempMJ);
-                System.out.println("We recursed");
+               
                 
                 
                 in = newIn.substring(endBraket).trim();
@@ -136,7 +127,6 @@ final class MyJSONParser implements JSONParser {
 				}
         }
         if(in.substring(0,1).equals(",")) {
-			System.out.println("Found a comma");
             //keep finding pair values and putting them into the object
             //until you hit a curly brace
             //keep checking for strings 
@@ -156,23 +146,16 @@ final class MyJSONParser implements JSONParser {
 				skipFirstQuote = in.substring(1).trim();
 				//find the next string, will be a key
                 startQuote = skipFirstQuote.indexOf("\"");
-                System.out.println("Found an opening quote for a key after a comma");
                 skipFirstQuote = skipFirstQuote.substring(1);
-                System.out.println(skipFirstQuote);
-                System.out.println("What the fuck is happening");
                 endQuote = skipFirstQuote.indexOf("\"");
-                System.out.println("Found an closing quote for a key after a comma");
                 tempKey = skipFirstQuote.substring(startQuote,endQuote);
-                System.out.println(tempKey);
                 tempKey = "\""+tempKey.trim()+"\"";
                 
         
 				String newStringIn;
 				
 				newStringIn = skipFirstQuote.substring(endQuote).trim();
-				System.out.println(newStringIn);
                 if(newStringIn.substring(0,1).equals(":")) {
-					System.out.println("Found a semicolon after a key after a comma");
                     // If there is a semicolon, there is a value 
                     // associated with that key
                     //find the value and put it into the hashtable
@@ -180,7 +163,6 @@ final class MyJSONParser implements JSONParser {
                     //get rid of whitespace between the semicolon and the next string
                     newStringIn = newStringIn.substring(1).trim();
                     if(newStringIn.substring(0,1).equals("\"")){
-						System.out.println("Found an opening quote for a val after a commas");
                         String newIn;
                         int tempEndVal;
                         String tempValue;
@@ -188,7 +170,6 @@ final class MyJSONParser implements JSONParser {
 						//find the next string
                         newIn = newStringIn.substring(endQuote+2);
                         tempEndVal = newIn.indexOf("\"");
-                        System.out.println("Found a close quote for a val after a commas");
                         tempValue = newIn.substring(0,tempEndVal);
                         tempValue = "\""+tempValue.trim()+"\"";
 
@@ -200,7 +181,6 @@ final class MyJSONParser implements JSONParser {
                         newStringIn = newIn.substring(tempEndVal);
                     }
                     else if(newStringIn.substring(0, 1).equals("{")){
-						System.out.println("Found an opening brace after as a value");
                         // If the symbol after the semicolon is a "{"
                         // then there is another hashtable after the key
                         // but we still add to the hashtable
@@ -210,7 +190,6 @@ final class MyJSONParser implements JSONParser {
 
                         newIn = newStringIn.substring(1);
                         endBraket = newIn.indexOf("}");
-                        System.out.println("Found a closing brace as a value");
                         tempValHT = newIn.substring(0,endBraket);
                         tempValHT = tempValHT.trim();
                         
@@ -223,13 +202,13 @@ final class MyJSONParser implements JSONParser {
                         allData.put(tempKey, tempMJ);
                     }
                 }
-                //Need to update the next character here to check what it is
+                // Need to update the next character here to check what it is
 
             } while (!nextCharacter.equals(""));
         } 
         else{
-            //might want to continue the loop, maybe have a while loop
-            //so if on eline is messed up but keep going??
+            // might want to continue the loop, maybe have a while loop
+            // so if on eline is messed up but keep going??
             IOException e = new IOException();
             throw e;
         }   
@@ -238,3 +217,13 @@ final class MyJSONParser implements JSONParser {
     return MJ;
   }
 }
+
+// Looking backat this now, I'm not entirely sure that I take care of all cases in my recursion.
+// If I had time to start over, I would make one large do while loop that ran while the string still had characters
+// I feel like that would more concisely take care of each possible case.
+// I believe that my code should work for the empty brackets and for the single hashtable. 
+// It was outputting the correct statements but it would not pass the given tests.  I believe this
+// may have had to do with my MyJSON.java file.
+// I believe it may also work for the nested hashtables.  However it cannot deal with commas
+// and it's causing an infinite loop in my while statement which I cannot seem to fix. 
+
